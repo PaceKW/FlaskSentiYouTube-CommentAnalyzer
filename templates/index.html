@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisis Sentimen Komentar YouTube</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Analisis Sentimen Komentar YouTube</h1>
+        <form method="POST" class="mt-4">
+            <div class="form-group">
+                <label for="video_id">Masukkan Video ID YouTube:</label>
+                <input type="text" class="form-control" id="video_id" name="video_id" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Analisis</button>
+        </form>
+
+        {% if analyzed_comments %}
+        <h2 class="mt-5">Hasil Analisis Komentar:</h2>
+        <ul class="list-group mt-3">
+            {% for comment, sentiment in analyzed_comments %}
+                <li class="list-group-item">
+                    <strong>{{ sentiment }}</strong>: {{ comment }}
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2 class="mt-5">Grafik Sentimen:</h2>
+        <canvas id="sentimentChart" width="400" height="200"></canvas>
+        <script>
+            const sentimentCounts = {{ sentiment_counts|tojson }};
+            const ctx = document.getElementById('sentimentChart').getContext('2d');
+            const sentimentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(sentimentCounts),
+                    datasets: [{
+                        label: 'Jumlah Komentar',
+                        data: Object.values(sentimentCounts),
+                        backgroundColor: ['#66b3ff', '#ff9999', '#99ff99'],
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        </script>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

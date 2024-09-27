@@ -1,0 +1,23 @@
+# Folder virtual environment
+.venv/
+venv/
+env/
+env.bak/
+ENV/
+ENV.bak/
+
+# File Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Environment variables
+.env
