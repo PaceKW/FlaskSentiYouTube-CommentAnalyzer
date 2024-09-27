@@ -19,17 +19,27 @@
         </form>
 
         {% if analyzed_comments %}
-        <h2 class="mt-5">Hasil Analisis Komentar:</h2>
-        <ul class="list-group mt-3">
-            {% for comment, sentiment in analyzed_comments %}
-                <li class="list-group-item">
-                    <strong>{{ sentiment }}</strong>: {{ comment }}
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="row mt-5">
+            <!-- Kolom Video YouTube -->
+            <div class="col-md-6">
+                <h2>Video YouTube</h2>
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <!-- Kolom Analisis -->
+            <div class="col-md-6">
+                <h2>Grafik Sentimen:</h2>
+                <canvas id="sentimentChart" width="400" height="200"></canvas>
+                <h2 class="mt-4">Hasil Analisis Komentar:</h2>
+                <ul class="list-group mt-3">
+                    {% for comment, sentiment in analyzed_comments %}
+                        <li class="list-group-item">
+                            <strong>{{ sentiment }}</strong>: {{ comment }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
 
-        <h2 class="mt-5">Grafik Sentimen:</h2>
-        <canvas id="sentimentChart" width="400" height="200"></canvas>
         <script>
             const sentimentCounts = {{ sentiment_counts|tojson }};
             const ctx = document.getElementById('sentimentChart').getContext('2d');
@@ -40,7 +50,7 @@
                     datasets: [{
                         label: 'Jumlah Komentar',
                         data: Object.values(sentimentCounts),
-                        backgroundColor: ['#66b3ff', '#ff9999', '#99ff99'],
+                        backgroundColor: ['#66b3ff', '#99ff99', '#ff9999'],
                     }]
                 },
                 options: {
