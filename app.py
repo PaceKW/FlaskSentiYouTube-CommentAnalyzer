@@ -1,5 +1,6 @@
+import re
 import nltk
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 from googleapiclient.discovery import build
 from nltk.corpus import wordnet as wn
 from nltk.corpus import sentiwordnet as swn
@@ -20,6 +21,11 @@ api_key = os.getenv('API_KEY')
 
 # Membangun objek YouTube
 youtube = build('youtube', 'v3', developerKey=api_key)
+
+def get_video_id(url):
+    # Regex untuk mengekstrak video ID dari URL YouTube
+    match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11})', url)
+    return match.group(1) if match else None
 
 def get_comments(video_id):
     comments = []
@@ -67,7 +73,12 @@ def analyze_sentiment(comment):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
-        video_id = request.form['video_id']
+        video_url = request.form['video_url']
+        video_id = get_video_id(video_url)
+        
+        if not video_id:
+            return render_template('index.html', analyzed_comments=None, sentiment_counts=None)
+
         comments = get_comments(video_id)
 
         # Hitung jumlah komentar berdasarkan label
