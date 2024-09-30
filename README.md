@@ -1,7 +1,7 @@
-# Analysis Sentiment YouTube Comments with Flask and SentiWordNet
+# YouTube Comments Sentiment Analysis with Flask and SentiWordNet
 
 ## Example/GIF Demonstration
-![Demo GIF](images/demo.gif)
+![Demo GIF](images/Demo.gif)
 
 ## Description
 This project is a **YouTube Comment Sentiment Analysis** application developed using **Flask** and **NLTK**. The application analyzes the sentiment of comments on YouTube videos and provides insights into viewer opinions.
