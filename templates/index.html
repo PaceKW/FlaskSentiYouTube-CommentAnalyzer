@@ -1,108 +1,138 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Analisis Sentimen Komentar YouTube</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            background-color: #f9fafb; /* Warna latar belakang */
-        }
-        .btn-custom {
-            background-color: #4f46e5; /* Warna tombol */
-            color: white; /* Warna teks tombol */
-            width: 100%; /* Memastikan tombol mengambil lebar penuh form */
-            padding: 10px; /* Padding tombol untuk ukuran yang lebih besar */
-        }
-        .btn-custom:hover {
-            background-color: #4338ca; /* Warna hover tombol */
-        }
-        .card {
-            border-radius: 1rem; /* Sudut melingkar untuk kartu */
-        }
+      body {
+        background-color: #f9fafb; /* Warna latar belakang */
+      }
+      .btn-custom {
+        background-color: #4f46e5; /* Warna tombol */
+        color: white; /* Warna teks tombol */
+        width: 100%; /* Memastikan tombol mengambil lebar penuh form */
+        padding: 10px; /* Padding tombol untuk ukuran yang lebih besar */
+      }
+      .btn-custom:hover {
+        background-color: #4338ca; /* Warna hover tombol */
+      }
+      .card {
+        border-radius: 1rem; /* Sudut melingkar untuk kartu */
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container mt-5">
-        <h1 class="text-center text-3xl font-bold mb-4">Analisis Sentimen Komentar YouTube</h1>
-        <form method="POST" class="mt-4 bg-white p-6 rounded shadow-md">
-            <div class="form-group">
-                <label for="video_url" class="text-lg font-medium">Masukkan URL Video YouTube:</label>
-                <input type="url" class="form-control border-2 border-gray-300 p-2 rounded-lg" id="video_url" name="video_url" required placeholder="Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-            </div>
-            <button type="submit" class="btn btn-custom mt-3">Analisis</button>
-        </form>
+      <h1 class="text-center text-3xl font-bold mb-4">
+        Analisis Sentimen Komentar YouTube
+      </h1>
+      <form method="POST" class="mt-4 bg-white p-6 rounded shadow-md">
+        <div class="form-group">
+          <label for="video_url" class="text-lg font-medium"
+            >Masukkan URL Video YouTube:</label
+          >
+          <input
+            type="url"
+            class="form-control border-2 border-gray-300 p-2 rounded-lg"
+            id="video_url"
+            name="video_url"
+            required
+            placeholder="Contoh: https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+          />
+        </div>
+        <button type="submit" class="btn btn-custom mt-3">Analisis</button>
+      </form>
 
-        {% if analyzed_comments %}
-        <div class="row mt-5">
-            <!-- Kolom Video YouTube -->
-            <div class="col-md-6">
-                <h2 class="text-xl font-bold">Video YouTube</h2>
-                <iframe width="100%" height="315" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <!-- Kolom Analisis -->
-            <div class="col-md-6">
-                <h2 class="text-xl font-bold">Grafik Sentimen:</h2>
-                <canvas id="sentimentChart" width="400" height="200"></canvas>
-                <h2 class="mt-4 text-xl font-bold">Hasil Analisis Komentar:</h2>
-                <ul class="list-group mt-3">
-                    {% for comment, sentiment in analyzed_comments %}
-                        <li class="list-group-item">
-                            <strong>{{ sentiment }}</strong>: {{ comment }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+      {% if analyzed_comments %}
+      <div class="row mt-5">
+        <!-- Kolom Video YouTube -->
+        <div class="col-md-6">
+          <h2 class="text-xl font-bold">Video YouTube</h2>
+          <iframe
+            width="100%"
+            height="315"
+            src="https://www.youtube.com/embed/{{ video_id }}"
+            frameborder="0"
+            allowfullscreen
+          ></iframe>
         </div>
 
-        <script>
-            const sentimentCounts = {{ sentiment_counts|tojson }};
-            const ctx = document.getElementById('sentimentChart').getContext('2d');
-            const sentimentChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: Object.keys(sentimentCounts),
-                    datasets: [{
-                        label: 'Jumlah Komentar',
-                        data: Object.values(sentimentCounts),
-                        backgroundColor: ['#66b3ff', '#99ff99', '#ff9999'],
-                        borderColor: ['#0056b3', '#28a745', '#dc3545'], // Warna border untuk bar
-                        borderWidth: 1
-                    }]
+        <!-- Kolom Grafik Sentimen -->
+        <div class="col-md-6">
+          <h2 class="text-xl font-bold">Grafik Sentimen:</h2>
+          <canvas id="sentimentChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+
+      <!-- Baris untuk komentar yang dianalisis -->
+      <div class="row mt-5">
+        <div class="col-md-12">
+          <h2 class="mt-4 text-xl font-bold">Hasil Analisis Komentar:</h2>
+          <ul class="list-group mt-3">
+            {% for comment, sentiment in analyzed_comments %}
+            <li class="list-group-item">
+              <strong>{{ sentiment }}</strong>: {{ comment }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <script>
+        const sentimentCounts = {{ sentiment_counts|tojson }};
+        const ctx = document.getElementById('sentimentChart').getContext('2d');
+        const sentimentChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(sentimentCounts),
+                datasets: [{
+                    label: 'Jumlah Komentar',
+                    data: Object.values(sentimentCounts),
+                    backgroundColor: ['#66b3ff', '#99ff99', '#ff9999'],
+                    borderColor: ['#0056b3', '#28a745', '#dc3545'], // Warna border untuk bar
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Jumlah Komentar', // Judul sumbu Y
+                        },
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Sentimen', // Judul sumbu X
+                        },
+                    }
                 },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Jumlah Komentar', // Judul sumbu Y
-                            },
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Sentimen', // Judul sumbu X
-                            },
-                        }
+                plugins: {
+                    legend: {
+                        display: false // Menyembunyikan legenda
                     },
-                    plugins: {
-                        legend: {
-                            display: false // Menyembunyikan legenda
-                        },
-                    },
-                }
-            });
-        </script>
-        {% endif %}
+                },
+            }
+        });
+      </script>
+      {% endif %}
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+  </body>
 </html>
