@@ -120,8 +120,11 @@ def index():
 
         for _, label in analyzed_comments:
             sentiment_counts[label] += 1
+            
+        # Hitung jumlah komentar yang diambil
+        total_comments = len(comments)
 
-        return render_template('index.html', analyzed_comments=analyzed_comments, sentiment_counts=sentiment_counts, video_id=video_id)
+        return render_template('index.html', analyzed_comments=analyzed_comments, sentiment_counts=sentiment_counts, video_id=video_id, total_comments=total_comments)
 
     return render_template('index.html', analyzed_comments=None, sentiment_counts=None)
 
