@@ -27,6 +27,24 @@ def get_video_id(url):
     match = re.search(r'(?:v=|\/)([0-9A-Za-z_-]{11})', url)
     return match.group(1) if match else None
 
+# Mengambil 100 Komentar
+# def get_comments(video_id):
+#     comments = []
+#     request = youtube.commentThreads().list(
+#         part='snippet',
+#         videoId=video_id,
+#         textFormat='plainText',
+#         maxResults=100
+#     )
+#     response = request.execute()
+
+#     for item in response.get('items', []):
+#         comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
+#         comments.append(comment)
+
+#     return comments
+
+# Mengambil Komentar sampai habis
 def get_comments(video_id):
     comments = []
     request = youtube.commentThreads().list(
@@ -35,13 +53,28 @@ def get_comments(video_id):
         textFormat='plainText',
         maxResults=100
     )
-    response = request.execute()
+    # Perulangan untuk mengambil komentar
+    while request:
+        response = request.execute()
 
-    for item in response.get('items', []):
-        comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
-        comments.append(comment)
+        for item in response.get('items', []):
+            comment = item['snippet']['topLevelComment']['snippet']['textDisplay']
+            comments.append(comment)
+
+        # Periksa apakah ada halaman berikutnya
+        if 'nextPageToken' in response:
+            request = youtube.commentThreads().list(
+                part='snippet',
+                videoId=video_id,
+                textFormat='plainText',
+                maxResults=100,
+                pageToken=response['nextPageToken']  # Menggunakan token halaman berikutnya
+            )
+        else:
+            request = None  # Tidak ada halaman berikutnya, keluar dari loop
 
     return comments
+
 
 def get_sentiment_score(word):
     synsets = wn.synsets(word)
