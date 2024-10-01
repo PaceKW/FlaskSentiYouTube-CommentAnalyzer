@@ -1,0 +1,23 @@
+body {
+  background-color: #f9fafb; /* Warna latar belakang */
+}
+
+.btn-custom {
+  background-color: #4f46e5; /* Warna tombol */
+  color: white; /* Warna teks tombol */
+  width: 100%; /* Memastikan tombol mengambil lebar penuh form */
+  padding: 10px; /* Padding tombol untuk ukuran yang lebih besar */
+}
+
+.btn-custom:hover {
+  background-color: #4338ca; /* Warna hover tombol */
+}
+
+.card {
+  border-radius: 1rem; /* Sudut melingkar untuk kartu */
+}
+
+.comment-section {
+  max-height: 400px;
+  overflow-y: scroll;
+}

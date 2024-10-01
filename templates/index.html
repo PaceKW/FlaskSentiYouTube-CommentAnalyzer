@@ -8,28 +8,12 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
-    <style>
-      body {
-        background-color: #f9fafb; /* Warna latar belakang */
-      }
-      .btn-custom {
-        background-color: #4f46e5; /* Warna tombol */
-        color: white; /* Warna teks tombol */
-        width: 100%; /* Memastikan tombol mengambil lebar penuh form */
-        padding: 10px; /* Padding tombol untuk ukuran yang lebih besar */
-      }
-      .btn-custom:hover {
-        background-color: #4338ca; /* Warna hover tombol */
-      }
-      .card {
-        border-radius: 1rem; /* Sudut melingkar untuk kartu */
-      }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
     <div class="container mt-5">
@@ -79,10 +63,7 @@
         <div class="col-md-12">
           <h2 class="mt-2 text-xl font-bold">Hasil Analisis Komentar:</h2>
           <!-- Section bergulir untuk komentar -->
-          <div
-            class="comment-section"
-            style="max-height: 400px; overflow-y: scroll"
-          >
+          <div class="comment-section">
             <ul class="list-group mt-3">
               {% for comment, sentiment in analyzed_comments %}
               <li class="list-group-item">
